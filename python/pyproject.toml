@@ -1,0 +1,51 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "onam"
+version = "1.1.0"
+description = "Fitting interpretable neural additive models using post hoc orthogonalization (Python port of the R package ONAM)"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [
+    { name = "David Köhler", email = "koehler@imbie.uni-bonn.de" },
+]
+keywords = [
+    "neural additive models",
+    "interpretable machine learning",
+    "orthogonalization",
+    "functional decomposition",
+    "explainable AI",
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "numpy>=1.22",
+    "scipy>=1.8",
+    "pandas>=1.4",
+    "keras>=3.0",
+    "matplotlib>=3.5",
+]
+
+[project.optional-dependencies]
+tensorflow = ["tensorflow>=2.16"]
+torch = ["torch>=2.1"]
+jax = ["jax>=0.4"]
+test = ["pytest>=7.0"]
+
+[project.urls]
+Homepage = "https://github.com/Koehlibert/ONAM_R"
+"Bug Tracker" = "https://github.com/Koehlibert/ONAM_R/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/onam"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+filterwarnings = ["ignore::DeprecationWarning"]
