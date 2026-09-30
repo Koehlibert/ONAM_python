@@ -1,3 +1,4 @@
 *.png
+!docs/figures/*.png
 *.ipynb
 .ipynb_checkpoints/

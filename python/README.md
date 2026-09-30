@@ -6,8 +6,9 @@ feature effects via **post-hoc orthogonalization**, including interaction effect
 of arbitrary order, and decompose a prediction function into explainable
 predictor effects.
 
-> Köhler et al. (2025), *Orthogonal neural additive models*,
-> <https://doi.org/10.1038/s44387-025-00033-7>
+> Köhler et al. (2025), *Achieving interpretable machine learning by functional
+> decomposition of black-box models into explainable predictor effects*,
+> npj Artificial Intelligence, <https://doi.org/10.1038/s44387-025-00033-7>
 
 ## Installation
 
@@ -62,7 +63,7 @@ print(model.gen_sobol())
 ```python
 model.fit(train, "y")                 # name of a column in the data (R-style)
 model.fit(X, y)                       # scikit-learn style: features + target array/Series
-model.fit(train)                      # y omitted -> use the formula's outcome column
+model.fit(train)                      # y omitted -> use the formula's outcome column (Common R syntax)
 ```
 
 `X` may be a DataFrame or a 2-D array (add `feature_names=[...]` for arrays).
@@ -77,7 +78,7 @@ model = ONAM.from_formula(
 model.fit(train, n_ensemble=2, epochs=100)   # outcome "y" taken from the formula
 ```
 
-`complex(.)` (or `("complex", ".")`) is the **residual term** over every feature
+`complex(.)` (or `("complex", ".")`) is a term including every feature
 except the outcome.
 
 ## Explaining an existing (black-box) model
@@ -85,10 +86,10 @@ except the outcome.
 ```python
 model = ONAM(terms=..., deep_models=...).fit(
     X,                            # features only
-    model=xgb_model,              # anything with .predict, or pass prediction_function
+    model=black_box_model,              # anything with .predict, or pass prediction_function
     prediction_function=lambda m, d: m.predict(d),
-    model_data=X_for_model,       # optional
-    n_ensemble=10, epochs=500,
+    model_data=X_for_model,       # optional, used by model.predict or prediction_function
+    n_ensemble=4, epochs=500,
 )
 ```
 
@@ -134,31 +135,15 @@ deep_models = {"res": resnet_block, "lin": DNN.linear()}
 ```
 
 The final layer must have a single linear output unit (`DNN` enforces this with
-a warning, matching the R `build_dnn`).
-
-## API map (R → Python)
-
-| R (`ONAM`)                       | Python (`onam`)                                   |
-|---------------------------------|---------------------------------------------------|
-| `onam(formula, list_of_deep_models, data, ...)` | `ONAM(terms=, deep_models=, ...).fit(X, y, ...)` or `ONAM.from_formula(...)` |
-| `build_dnn(units=, layer_df=)`   | `DNN(units=, layers=)`                             |
-| `predict(mod, newdata)`          | `model.predict(newdata)` → `ONAMPrediction`        |
-| `summary(mod)`                   | `model.summary()` → `Summary`                      |
-| `decompose(mod, data)`           | `model.decompose(data)` → `VarDecomp` (`.plot()`)  |
-| `gen_sobol(mod, data)`           | `model.gen_sobol(data)` → `GenSobol` (`.plot()`)   |
-| `plot_main_effect(mod, "x1")`    | `plot_main_effect(model, "x1")`                    |
-| `plot_inter_effect(mod, "x1", "x2")` | `plot_inter_effect(model, "x1", "x2")`         |
-| `save_onam(mod, dir)` / `load_onam(dir)` | `model.save(dir)` / `ONAM.load(dir)`       |
-| `install_conda_env()`            | not needed — install a Keras backend with pip     |
+a warning).
 
 ## How it works
 
 1. **Fit** an additive model: one sub-network per (interaction) term, summed
    (then a sigmoid for `target="binary"`), trained by Adam on MSE / BCE.
-2. **Orthogonalize each ensemble member** (`pho`): project every interaction
-   order onto the span of all lower orders (penultimate-layer features + an
-   intercept) via pivoted-QR least squares and move the shared component down,
-   then mean-center every effect but the first.
+2. **Orthogonalize each ensemble member**: project every interaction
+   order onto the span of all lower order terms via pivoted-QR least squares and 
+   move the shared component down, then mean-center every effect but the first.
 3. **Ensemble-orthogonalize** (`pho_ensemble`): repeat the projection on the
    ensemble-averaged effects.
 4. The resulting `feature_effects` are identifiable and sum to the prediction,
