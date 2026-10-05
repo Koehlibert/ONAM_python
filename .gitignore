@@ -1,4 +1,14 @@
-*.png
-!docs/figures/*.png
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+build/
+dist/
+.venv/
+
+# Notebooks and generated figures (README figures are kept)
 *.ipynb
 .ipynb_checkpoints/
+*.png
+!docs/figures/*.png

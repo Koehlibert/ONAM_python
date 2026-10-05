@@ -28,11 +28,10 @@ The method is described in
 
 ## Installation
 
-The package lives in the [`python/`](python) directory of this repository and is
-not on PyPI yet, so install it from GitHub:
+The package is not on PyPI yet, so install it from GitHub:
 
 ```bash
-pip install "git+https://github.com/Koehlibert/ONAM_python.git#subdirectory=python"
+pip install "git+https://github.com/Koehlibert/ONAM_python.git"
 ```
 
 `onam` builds its networks with Keras 3, which needs a backend. TensorFlow is
@@ -48,7 +47,7 @@ Requires Python ≥ 3.9.
 
 The example below fits a gradient boosting model to data and then uses `onam` to
 explain it. The full script is
-[`python/examples/black_box.py`](python/examples/black_box.py); it additionally
+[`examples/black_box.py`](examples/black_box.py); it additionally
 needs `scikit-learn` and runs in about three minutes on a laptop CPU.
 
 ### 1. Data
@@ -74,7 +73,7 @@ y = (
 X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=1)
 ```
 
-### 2. Fit the black box
+### 2. Fit black box model
 
 Any model works, as long as it can produce predictions. Here it is a
 scikit-learn gradient boosting regressor.
@@ -127,7 +126,7 @@ express. It should always be included. It is what makes the ONAM able to reprodu
 the black box, and its size tells you how much of the black box is *not*
 interpretable.
 
-### 4. Fit the ONAM to the black box
+### 4. Fit the ONAM to the black box model
 
 Pass the features and the fitted model. `onam` calls `black_box.predict` on the
 features and uses those predictions as the training target.
@@ -136,7 +135,7 @@ features and uses those predictions as the training target.
 model.fit(X_train, model=black_box, n_ensemble=5, epochs=200, seed=1, progress=True)
 ```
 
-Behind this call, `onam` trains `n_ensemble` networks, and performs a final orthogonalization 
+`onam` trains `n_ensemble` networks, and performs a final orthogonalization 
 after each `onam` ensemble member was fitted and orthogonalized.
 
 If your model has no `.predict` method, or you need something other than its

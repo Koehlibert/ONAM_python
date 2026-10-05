@@ -18,7 +18,7 @@ from sklearn.model_selection import train_test_split
 
 from onam import DNN, ONAM, plot_inter_effect, plot_main_effect
 
-FIG_DIR = Path(__file__).resolve().parents[2] / "docs" / "figures"
+FIG_DIR = Path(__file__).resolve().parents[1] / "docs" / "figures"
 FIG_DIR.mkdir(parents=True, exist_ok=True)
 
 # 1. Data ------------------------------------------------------------------- #

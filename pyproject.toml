@@ -40,8 +40,8 @@ jax = ["jax>=0.4"]
 test = ["pytest>=7.0"]
 
 [project.urls]
-Homepage = "https://github.com/Koehlibert/ONAM_R"
-"Bug Tracker" = "https://github.com/Koehlibert/ONAM_R/issues"
+Homepage = "https://github.com/Koehlibert/ONAM_python"
+"Bug Tracker" = "https://github.com/Koehlibert/ONAM_python/issues"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/onam"]
