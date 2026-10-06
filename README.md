@@ -1,6 +1,5 @@
 # onam — Orthogonal Neural Additive Models in Python
 
-[![CRAN version of the R package](https://www.r-pkg.org/badges/version/ONAM)](https://CRAN.R-project.org/package=ONAM)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 `onam` takes the prediction function of any machine learning model and splits it
